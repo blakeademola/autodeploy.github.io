@@ -81,7 +81,7 @@
 
             <div class="content">
                 <div class="title m-b-md">
-                    Laravel Blake Auto deploy
+                    Laravel Blake Auto deploys
                 </div>
 
                 <div class="links">
