@@ -190,21 +190,39 @@
 
                     {{-- start here--}}
                     <div class="card">
-                        <div class="card-header"><strong>ITEMS LIST</strong></div>
+                        <div class="card-header"><strong>ITEMS ORDER LIST</strong></div>
                         <div class="card-body">
                             <table style="width:100%">
                                 <tr>
+                                    <th>Order No</th>
+                                    <th>User</th>
                                     <th>Item</th>
-                                    <th>Lastname</th>
-                                    <th>Age</th>
+                                    <th>Desc</th>
+                                    <th>Qty</th>
+                                    <th>Weight</th>
+                                    <th> Mode</th>
+                                    <th>Dispatch from</th>
+                                    <th>Tax</th>
+                                    <th>Total</th>
+                                    <th>Grand Total</th>
+                                    <th>Status</th>
                                 </tr>
                                 @forelse($item_orders as $order)
-                                <tr>
-                                    <td>Jill</td>
-                                    <td>Smith</td>
-                                    <td>50</td>
-                                </tr>
-                                    @empty
+                                    <tr>
+                                        <td>{{$order->order_no}}</td>
+                                        <td>{{$order->user->name}}</td>
+                                        <td>{{$order->item->name}}</td>
+                                        <td>{{$order->desc}}</td>
+                                        <td>{{$order->qty}}</td>
+                                        <td>{{$order->weight}}</td>
+                                        <td>{{$order->mode->name}}</td>
+                                        <td>{{$order->dispatch->name}}</td>
+                                        <td>{{$order->tax}}</td>
+                                        <td>{{$order->total}}</td>
+                                        <td>{{$order->grand_total}}</td>
+                                        <td>{{$order->status}}</td>
+                                    </tr>
+                                @empty
                                     <tr>
                                         No data found
                                     </tr>
@@ -464,7 +482,7 @@
                         $('#grand_total').html('<b>' + 'Grand Total: ' + '</b>' + res.grand_total);
                         $('#total_pay').append(res.grand_total).show();
                         $('#process_pay').show();
-                        $('#paste_total').val((res.grand_total)*100);
+                        $('#paste_total').val((res.grand_total) * 100);
                     }
                 },
             });
