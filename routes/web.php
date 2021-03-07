@@ -14,5 +14,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect()->to(route('get-total'));
 });
+Route::any('/get-total', 'CalculateTotalController@getTotal')->name('get-total');
+
+Route::any('/pay', 'PayController@redirectToGateway')->name('pay');
+Route::get('/payment/callback', 'PayController@handleGatewayCallback');
