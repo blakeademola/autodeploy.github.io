@@ -224,7 +224,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        No data found
+                                        <td>No data found</td>
                                     </tr>
                                 @endforelse
 
