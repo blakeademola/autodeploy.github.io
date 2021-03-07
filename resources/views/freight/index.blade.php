@@ -190,6 +190,30 @@
 
                     {{-- start here--}}
                     <div class="card">
+                        <div class="card-header"><strong>ITEMS LIST</strong></div>
+                        <div class="card-body">
+                            <table style="width:100%">
+                                <tr>
+                                    <th>Item</th>
+                                    <th>Lastname</th>
+                                    <th>Age</th>
+                                </tr>
+                                @forelse($item_orders as $order)
+                                <tr>
+                                    <td>Jill</td>
+                                    <td>Smith</td>
+                                    <td>50</td>
+                                </tr>
+                                    @empty
+                                    <tr>
+                                        No data found
+                                    </tr>
+                                @endforelse
+
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card">
                         <div class="card-header"><strong>Super Freight</strong> Order Form for: <b>{{$user->name}}</b>
                         </div>
                         <div class="card-body">

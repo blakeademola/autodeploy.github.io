@@ -23,6 +23,7 @@ class CalculateTotalController extends Controller
         $countries = Country::all();
         $transport_modes = TransportMode::all();
         $items = Item::all();
+        $item_orders = ItemOrder::all();
 
         if ($request->isMethod('POST')) {
             $exempted_form_data = (collect($request->form)->groupBy('name')->except(['country', 'mode']));
@@ -99,7 +100,7 @@ class CalculateTotalController extends Controller
                 ]
             );
         }
-        return view("freight.index", compact('user', 'item_order', 'countries', 'transport_modes', 'items'));
+        return view("freight.index", compact('user', 'item_order', 'countries', 'transport_modes', 'items','item_orders'));
     }
 
     public function validateRequest($test2)
