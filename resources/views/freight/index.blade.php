@@ -483,7 +483,9 @@
                         $('#tax').html('<b>' + 'Tax: ' + '</b>' + res.tax);
                         $('#grand_total').html('<b>' + 'Grand Total: ' + '</b>' + res.grand_total);
                         $('#total_pay').html('<b>' + 'To Pay: ' + '</b>' + ((res.grand_total))).show();
-                        $('#process_pay').show();
+                        if($('#save_form').attr("data-save")=='true') {
+                            $('#process_pay').show();
+                        }
                         $('#paste_total').val(((res.grand_total) * 100));
                     }
                 },
