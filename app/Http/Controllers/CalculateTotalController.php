@@ -29,18 +29,21 @@ class CalculateTotalController extends Controller
             $exempted_form_data = (collect($request->form)->groupBy('name')->except(['country', 'mode']));
             $full_form_data = (collect($request->form)->groupBy('name')->toArray());
 
-            $errors = $this->validateRequest($full_form_data);
 
-            if (count($errors)) {
-                return response()->json(
-                    [
-                        "status" => false,
-                        "msg" => implode(',', $errors),
-                    ]
-                );
-            }
+                $errors = $this->validateRequest($full_form_data);
+
+                if (count($errors)) {
+                    return response()->json(
+                        [
+                            "status" => false,
+                            "msg" => implode(',', $errors),
+                        ]
+                    );
+                }
+
             $sum = [];
             $mode_check = TransportMode::where('name', $full_form_data['mode'][0]['value'])->first();
+
             $mode_base_fare = (int)($mode_check->base_fare);
             $country = Country::where('name', $full_form_data['country'][0]['value'])->first();
             $country_flat_rate = (int)$country->flat_rate;
@@ -87,9 +90,9 @@ class CalculateTotalController extends Controller
             $total = ($country_flat_rate + $weight) * $quantity;
             $tax = 10 * ($total / 100);
             $grand_total = ($total + $tax);
-
-            $this->saveRecord($data, $mode_check, $mode_base_fare, $country_name, $user, $total, $tax, $grand_total);
-
+            if ($request->save == 'true') {
+                $this->saveRecord($data, $mode_check, $mode_base_fare, $country_name, $user, $total, $tax, $grand_total);
+            }
 
             return response()->json(
                 [
@@ -100,7 +103,7 @@ class CalculateTotalController extends Controller
                 ]
             );
         }
-        return view("freight.index", compact('user', 'item_order', 'countries', 'transport_modes', 'items','item_orders'));
+        return view("freight.index", compact('user', 'item_order', 'countries', 'transport_modes', 'items', 'item_orders'));
     }
 
     public function validateRequest($test2)
@@ -141,9 +144,8 @@ class CalculateTotalController extends Controller
                 [
                     'item_id' => Item::where('name', $item['item'])->first()->id,
                     'user_id' => $user->id,
-                    'order_no' => $rand],
+                    'status' => 'unpaid'],
                 [
-
                     'desc' => $item['desc'],
                     'weight' => $item['weight'],
                     'qty' => $item['qty'],
@@ -151,7 +153,7 @@ class CalculateTotalController extends Controller
                     'transport_mode_id' => $mode->id,
 //                'single_item_total' => (($weight == 1 ? $base_fare : ($base_fare + ((--$weight) * ($mode_check == 'air' ? 10000 : 2000)))) / count($data)) * $qty, ,
                     'country_id' => $country_id,
-                    'status' => 'unpaid',
+                    'order_no' => $rand,
                     'total' => $total,
                     'tax' => $tax,
                     'grand_total' => $grand_total

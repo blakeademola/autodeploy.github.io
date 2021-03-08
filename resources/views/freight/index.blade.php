@@ -224,7 +224,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td>No data found</td>
+                                        No data found
                                     </tr>
                                 @endforelse
 
@@ -321,7 +321,7 @@
                                     <div class="" id="grand_total"><b>Grand Total:</b>0</div>
                                 </div>
                                 <div class="card-footer" style="text-align: right">
-                                    <button class="btn btn-sm btn-primary" id="save_form"
+                                    <button class="btn btn-sm btn-primary" data-save="false" id="save_form"
                                             type="submit"> Save
                                     </button>
 
@@ -406,31 +406,31 @@
         $(document).on('click', '.quantity', function () {
             qty = $(this).val();
             console.log('qty:' + qty)
-            // calculate();
+            calculate();
         });
 
         $(document).on('change', '.items', function () {
             item = $(this).val();
             console.log('item:' + item)
-            // calculate();
+            calculate();
         });
 
         $(document).on('click', '.weight', function () {
             weight = $(this).val();
             console.log('weight' + weight)
-            // calculate();
+            calculate();
         });
 
         $('#transport_mode').change(function (e) {
             if ($(this).val() === 'air') {
                 mode = 50000;
                 console.log('air:' + mode)
-                // calculate();
+                calculate();
             }
             if ($(this).val() === 'sea') {
                 mode = 15000;
                 console.log('sea:' + mode)
-                // calculate();
+                calculate();
             }
         });
 
@@ -438,33 +438,35 @@
             if ($(this).val() === 'usa') {
                 dispatch = 1500;
                 console.log('usa:' + dispatch)
-                // calculate();
             }
             if ($(this).val() === 'uk') {
                 dispatch = 800;
                 console.log('uk:' + dispatch)
-                // calculate();
             }
+            calculate();
         });
 
 
         $('#save_form').click(function (e) {
             e.preventDefault();
             if (confirm('Are You sure?')) {
+               $(this).attr("data-save","true");
                 calculate();
             }
+
         });
 
         function calculate() {
             var url = "{{route('get-total')}}";
             var form = $('#formField').serializeArray();
+            var save = $('#save_form').attr("data-save");
 
             $.ajax({
                 type: "POST",
                 url: url,
                 data: {
                     "_token": "{{ csrf_token() }}",
-                    "form": form
+                    "form": form, "save":save,
                 },
                 dataType: "json",
 
@@ -480,9 +482,9 @@
                         $('#total').html('<b>' + 'Total: ' + '</b>' + res.total);
                         $('#tax').html('<b>' + 'Tax: ' + '</b>' + res.tax);
                         $('#grand_total').html('<b>' + 'Grand Total: ' + '</b>' + res.grand_total);
-                        $('#total_pay').append(res.grand_total).show();
+                        $('#total_pay').html('<b>' + 'To Pay: ' + '</b>' + ((res.grand_total))).show();
                         $('#process_pay').show();
-                        $('#paste_total').val((res.grand_total) * 100);
+                        $('#paste_total').val(((res.grand_total) * 100));
                     }
                 },
             });
